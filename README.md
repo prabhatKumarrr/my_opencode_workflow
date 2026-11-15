@@ -23,7 +23,7 @@ OpenSpec configuration, commands, skills, and schema.
 Open your existing project with OpenCode and ask it to install the template:
 
 ```text
-Read and understand https://raw.githubusercontent.com/intent-driven-dev/intent-driven-template/refs/heads/main/INSTALL_TEMPLATE.md and follow the instructions there.
+Read and understand https://raw.githubusercontent.com/prabhatKumarrr/my_opencode_workflow/refs/heads/main/INSTALL_TEMPLATE.md and follow the instructions there.
 ```
 
 ## What This Template Uses

@@ -17,7 +17,7 @@ Clone a fresh local copy of the template repository outside the target project:
 
 ###### ##### need to change the git url ###########
 ```bash
-git clone https://github.com/intent-driven-dev/intent-driven-template.git
+git clone git@github.com:prabhatKumarrr/my_opencode_workflow.git
 ```
 
 If the user already has a local clone, you may use it after checking its current
