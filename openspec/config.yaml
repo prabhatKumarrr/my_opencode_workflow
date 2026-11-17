@@ -23,6 +23,7 @@ operations:
   apply:
     guidance:
       - Must use test-driven-development skill
+      - Must read .agents/skills/ponytail/mode.md and apply the ponytail skill at that level to every implementation task
   archive:
     guidance:
       - Must run OpenSpec Sync before archiving

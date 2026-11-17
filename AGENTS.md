@@ -54,6 +54,7 @@ This is the review sequence; actual dependencies and conditional artifacts come 
 - Verify before merge. Archive only on `main` after implementation is committed/merged there and zone checkpoints are satisfied. Sync inline, verify integration, then archive; report absent/already-synced deltas accurately. Request the final archive/spec commit.
 - Bulk operations need explicit selection, installed support, per-change gates, and conflict checks; documentation mentions alone do not establish availability.
 - Use strict red-green-refactor with existing tooling: confirm the intended failure, implement minimally, rerun tests, refactor on green. Mock external boundaries; mark tasks done only after full completion.
+- During apply, always load `.agents/skills/ponytail/mode.md` and apply the ponytail skill at that level to every code change; it is not used for planning artifacts. Run `ponytail-review` for implemented code and `ponytail-audit` when whole-repo optimisation is requested.
 - Delegate only when requested or required by a skill/workflow; use `senior-dev`/`senior-qa` when appropriate, with explicit scope and zone isolation. The primary agent owns integration/evidence.
 - Run relevant tests, acceptance/lint/type checks, `git diff --check`, and strict OpenSpec change validation for behaviour changes. Report actual results, unrun/blocked checks, changed files, limitations, and next checkpoint. Never fake success; advisory verify does not replace tests or git gates.
 
