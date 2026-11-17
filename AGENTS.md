@@ -55,6 +55,12 @@ This is the review sequence; actual dependencies and conditional artifacts come 
 - Bulk operations need explicit selection, installed support, per-change gates, and conflict checks; documentation mentions alone do not establish availability.
 - Use strict red-green-refactor with existing tooling: confirm the intended failure, implement minimally, rerun tests, refactor on green. Mock external boundaries; mark tasks done only after full completion.
 - During apply, always load `.agents/skills/ponytail/mode.md` and apply the ponytail skill at that level to every code change; it is not used for planning artifacts. Run `ponytail-review` for implemented code and `ponytail-audit` when whole-repo optimisation is requested.
+- Detect frontend scope per change: read `Frontend scope: yes | no | partial` from `tasks.md`; when absent or stale, treat files matching `.tsx .jsx .css .scss .vue .svelte` or paths `components/ pages/ app/ styles/ layouts/` as frontend. The emil design and motion skills apply only to frontend work and must not be loaded for backend changes.
+- Verify order: run `openspec-verify` first and stop the chain if it fails; on success run `ponytail-review`; if the change touched motion or animation code, run `review-animations` last.
+- `improve-animations` must not write `plans/` or `animation-plans/`; report findings in the conversation and convert approved findings into `tasks.md` of an active change.
+- Do not run `improve-animations execute <plan>`; execution happens only through a change's apply tasks with normal worktree authorization.
+- `break-ui` may add a dev-only worst-case data toggle, but it must be removed before the task is marked done and must never be committed.
+- `remove-animations` may delete motion only within an active change's stated scope; deletions outside it need their own change.
 - Delegate only when requested or required by a skill/workflow; use `senior-dev`/`senior-qa` when appropriate, with explicit scope and zone isolation. The primary agent owns integration/evidence.
 - Run relevant tests, acceptance/lint/type checks, `git diff --check`, and strict OpenSpec change validation for behaviour changes. Report actual results, unrun/blocked checks, changed files, limitations, and next checkpoint. Never fake success; advisory verify does not replace tests or git gates.
 

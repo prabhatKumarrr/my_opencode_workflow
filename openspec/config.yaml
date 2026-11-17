@@ -18,12 +18,14 @@ rules:
     - Must use spec-as-source skill
   tasks:
     - Must use spec-as-source skill
+    - "State `Frontend scope: yes | no | partial` at the top of tasks.md"
 
 operations:
   apply:
     guidance:
       - Must use test-driven-development skill
       - Must read .agents/skills/ponytail/mode.md and apply the ponytail skill at that level to every implementation task
+      - Load the emil design and motion skills only for frontend scope as detected by the AGENTS.md frontend gate
   archive:
     guidance:
       - Must run OpenSpec Sync before archiving
