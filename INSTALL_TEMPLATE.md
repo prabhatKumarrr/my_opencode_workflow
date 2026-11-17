@@ -10,7 +10,9 @@ it does not implement product features or certify application correctness.
 - Preserve product code, tests, history, configuration and user-owned changes.
 - Show the exact file plan and conflicts; obtain approval before writing.
 - Follow applicable target and ancestor AGENTS.md instructions.
-- Do not install dependencies, plugins, browser binaries or MCP servers.
+- Do not install dependencies, plugins, browser binaries or MCP servers except
+  the CodeGraph components explicitly included in an approved installation plan
+  under section 7.1. Default selection alone is not approval.
 - Do not modify secrets, environment files, databases or deployment settings.
 - Do not commit, stash, create branches/worktrees, merge, push or create PRs
   without explicit approval.
@@ -89,7 +91,15 @@ was reviewed with OpenSpec 1.15.0 and OpenCode v2.3.0; these are reference
 versions, not proof that every older or newer release is compatible.
 
 Missing or incompatible tools are blockers to runtime validation, not
-permission to install or regenerate configuration.
+permission to install or regenerate configuration. The approved CodeGraph
+setup in section 7.1 is the only installation exception in this guide.
+
+For CodeGraph, distinguish CLI availability/version, effective OpenCode MCP
+configuration/connection, and the target project's index root/health. Inspect
+existing local and applicable global configuration without exposing secrets;
+do not assume a CLI executable or .codegraph/ directory proves working setup.
+Check that an ancestor or another worktree's index is not being mistaken for
+this target's index.
 
 ## 4. Present the Installation Plan
 
@@ -102,6 +112,13 @@ Before editing, provide:
 5. Existing instructions that conflict with template gates.
 6. Specs-zone/code-zone checkpoints and approvals needed.
 7. Deferred project setup and validation limitations.
+8. CodeGraph, default-selected: detected state, components to reuse/install,
+   exact commands and affected paths, installation location, telemetry choice,
+   watcher/background-process effects, and any deferred indexing.
+
+Wait for approval of this plan before installing, connecting or initialising
+CodeGraph. The user may deselect it. Approval covers only the listed operations;
+new writes, global changes or repair work outside that scope require approval.
 
 Read existing files before proposing their merge. Include JSONC as well as
 JSON and alternative YAML filenames; do not create a competing configuration
@@ -182,8 +199,10 @@ not just the OpenSpec git-discipline bullet. Confirm coverage of:
 - Temporary worst-case toggle cleanup and scoped animation removal.
 - Delegation restrictions and evidence/reporting requirements.
 
-Do not enable Superpowers, Impeccable, taste-skill, Playwright or CodeGraph
-as part of this installation. No plugin is enabled by the template config.
+Do not enable Superpowers, Impeccable, taste-skill or Playwright as part of this
+installation. CodeGraph is default-selected but may be set up only through the
+approved plan in section 7.1. It is a CLI/MCP integration, not an OpenCode plugin
+entry; the base template config itself enables no plugin.
 
 ## 7. Reconcile Project Choices Without Guessing
 
@@ -220,6 +239,123 @@ For React/browser behaviour, explain the HTTP-only coverage boundary.
 Playwright remains an optional, separately approved project integration;
 it does not require a new acceptance stack value or a second runner.
 
+### 7.1 CodeGraph — Default-Selected, Approval-Gated Setup
+
+Upstream: https://github.com/colbymchenry/codegraph
+
+Include CodeGraph in every installation plan by default, but do not treat an
+installation request or default selection as permission to execute its setup.
+Perform this section only after the user approves the concrete operations.
+Keep setup in the code-zone batch and respect all target permissions.
+
+**Detect and reuse first**
+
+- Locate the CLI and check its version and installed-version help.
+- Inspect effective MCP configuration and runtime tool availability. Reuse a
+  working global connection; do not create a duplicate project server.
+- Confirm the actual code root, index location, version compatibility and health.
+  Monorepos and worktrees may need separate indexes or explicit project paths.
+- Do not copy the template's index, borrow another checkout's index, upgrade the
+  CLI, rebuild an index or remove locks automatically.
+
+Illustrative checks, when the installed version supports them:
+
+```sh
+codegraph --version
+codegraph status <project-path> --json
+```
+
+Use the approved target path in place of the placeholder. Do not call status on
+an unindexed project repeatedly. Where command telemetry has side effects, use
+a reviewed per-process opt-out for discovery rather than silently enabling it.
+
+| Detected state | Action after plan approval |
+| --- | --- |
+| Working CLI, MCP and correct healthy index | Reuse; no reinstall or rebuild |
+| Working CLI/index, MCP unavailable | Use CLI fallback; configure MCP only if approved |
+| CLI available, target unindexed | Initialise the approved code root |
+| CLI missing | Install using the approved method/location, then configure/index |
+| Index stale, incompatible or broken | Report; perform only the approved sync/repair |
+| Empty greenfield project | Defer useful indexing until application source exists |
+| Setup declined or unavailable | Use repository search; report CodeGraph as deferred/unavailable |
+
+**Install only missing, approved components**
+
+If the CLI is missing, agree on its installation method and location before
+running a package manager or downloaded installer. Do not silently use npm -g,
+pipe remote scripts into a shell, or modify application dependencies/lockfiles.
+No Node.js, system-runtime installation or PATH/profile edit is implied.
+
+Prefer a reviewed merge of the missing OpenCode MCP entry over a blind installer.
+Use the current OpenCode configuration shape and installed CodeGraph command;
+preserve JSONC comments, unrelated servers, permissions and custom launch flags.
+Do not introduce a competing config file or override a working global server.
+
+If using the upstream installer, review its current behaviour and exact writes
+first. It can modify both OpenCode configuration and AGENTS.md. Scope it to
+OpenCode and the project, never auto-detect/all agents or global defaults:
+
+```sh
+codegraph install --target=opencode --location=local
+```
+
+Do not add --yes or --init to bypass review. Its generated instructions must not
+override source verification, delegation, git gates or permission boundaries.
+If those writes cannot match the approved plan, stop and use a separately
+reviewed configuration merge instead. Preserve the target's CodeGraph policy
+without adding a duplicate or conflicting instruction block.
+
+**Privacy, process and index scope**
+
+Disclose anonymous telemetry: current upstream defaults it on. Ask the user to
+choose a policy before setup; no choice means pause, not implicit consent.
+Apply an approved opt-out to CLI setup and the MCP process if selected.
+Prefer process/server-scoped configuration over changing a global preference;
+never edit environment files or global telemetry settings without approval.
+
+The graph database is local, but this does not make the whole workflow
+network-free: installation downloads, telemetry and model-provider handling of
+retrieved source are separate considerations.
+
+Explain MCP watcher/daemon startup, incremental updates and disk/CPU costs.
+Agree on exclusions for sensitive, generated, vendored and out-of-scope files;
+do not expand indexing into ignored child repositories without approval.
+
+For an unindexed project with useful source, an approved initialisation may use:
+
+```sh
+codegraph init <project-path> --local-only
+```
+
+Confirm the installed version supports --local-only and review resulting paths.
+This keeps graph state local to Git; it does not make CLI installation
+project-local. Preserve customised ignore/config files and inspect Git status
+afterwards. Never commit database, cache or private graph artifacts.
+
+In an empty greenfield project, record indexing as deferred. Arrange initial
+indexing as an explicit approved task after the application skeleton exists;
+do not create fake source or initialise repeatedly to claim useful coverage.
+
+**Use without weakening workflow gates**
+
+For indexed code, query the correct project through the available CodeGraph MCP
+tool or codegraph explore first. Keep queries narrow to avoid large context
+payloads; token savings are workload-dependent, not guaranteed.
+
+Preserve AGENTS.md's source-verification rule. Check relevant live source before
+consequential edits; do not repeat broad discovery unnecessarily. Read specs,
+ADRs, instructions and non-indexed configuration directly. Treat graph edges as
+best-effort structural evidence, not proof of requirements or runtime behaviour.
+
+Check freshness warnings and fall back to direct reads for pending/uncovered
+files. Auto-sync can lag and is not proof of complete coverage. Missing indexes,
+failed tools or unavailable MCP must have a repository-search fallback.
+
+Approval for initial setup does not permit automatic install/init/rebuild during
+later queries. Refreshes outside the approved watcher behaviour require the
+normal permission checks. CodeGraph never replaces TDD, the full required
+acceptance suite, reviews, strict OpenSpec validation or git checkpoints.
+
 ## 8. Validate the Installed Wiring
 
 Run only read-only checks available in the target environment:
@@ -251,6 +387,19 @@ Also verify:
 In OpenCode, confirm command, agent and skill discovery after reload if
 needed. Use supported runtime discovery; file existence alone is insufficient.
 
+For approved CodeGraph setup, check index health for the exact target using
+codegraph status <project-path> --json --strict when supported. Confirm a narrow
+query about a known source symbol through the configured MCP tool or CLI and
+check its source location/freshness. Inspect the resulting config/instruction
+diff and Git status for unintended writes. A directory alone is not success.
+Do not initialise, sync or repair merely because validation fails; report the
+failure and request approval for any unplanned remediation.
+
+Report CLI-only operation separately from a confirmed MCP connection. If the
+project is empty or CodeGraph was deselected, record indexing as deferred or
+setup as declined; do not claim graph validation passed or block the otherwise
+usable core workflow solely for that optional integration.
+
 Explicitly load review-animations when the motion-review gate requires it.
 OpenCode V2 supports disable-model-invocation: true, which hides automatic
 advertising but still permits explicit skill loading.
@@ -279,6 +428,9 @@ Report:
 - Whether runtime discovery and both council models were confirmed.
 - Pending zone/git checkpoints.
 - Deferred acceptance setup, browser coverage and known limitations.
+- CodeGraph selection, CLI/version/location, reused or changed MCP setup, exact
+  index root and health/query results, telemetry/watcher policy and fallback.
+  Include deferred greenfield indexing or unapproved repairs explicitly.
 
 Distinguish "workflow files installed" from "application workflow verified".
 
