@@ -1,7 +1,7 @@
 ---
 description: Authors artifacts for adversarial-authoring.
 mode: subagent
-# model: opencode/big-pickle
+model: opencode/deepseek-v4.1-flash-free # Change to any model available weaker than reviewer agent
 permission:
   edit: allow
   bash: deny

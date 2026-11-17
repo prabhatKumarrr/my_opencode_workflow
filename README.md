@@ -39,7 +39,9 @@ Read and understand https://raw.githubusercontent.com/prabhatKumarrr/my_opencode
   including C4 diagrams, ADR authoring, and OpenSpec lifecycle commands.
 - A bundled `test-driven-development` skill plus `senior-dev` and `senior-qa`
   subagents in `.opencode/agent/` for test-first implementation and
-  acceptance-test work, routed via the `context` block in `openspec/config.yaml`.
+  acceptance-test work. These specialists are available for delegation;
+  automatic routing is not configured. TDD is required by apply guidance in
+  `openspec/config.yaml` and the protocols in `AGENTS.md`.
 - A `grill-me` style of rigorous design interrogation, inspired by
   https://github.com/mattpocock/skills/blob/main/skills/productivity/grill-me/SKILL.md.
 - ADRs for durable architectural decisions.
@@ -93,7 +95,7 @@ Standard OpenSpec lifecycle skills in `.opencode/skills/` — names are self-exp
 
 | Skill | Location | Purpose | Enabled Or Updated By |
 |-------|----------|---------|-----------------------|
-| `openspec-bulk-apply-change` | `.opencode/skills/` | Applies multiple active changes concurrently in isolated worktrees with parallel verification. | Invoke directly with `/opsx:bulk-apply` command when applying multiple active openspec changes. |
+| `openspec-bulk-apply-change` | `.opencode/skills/` | Applies multiple active changes in isolated worktrees with delegated verification; never merges or archives. | Invoke the skill directly; no `/opsx-bulk-apply` command file is present. |
 | `adversarial-authoring` | `.opencode/skills/` | Runs author and reviewer agents in sequence to reduce model bias in drafts. | Refer to the skill under rule in the rules section of `openspec/config.yaml`. |
 | `grill-me` | `.agents/skills/` | Interrogates plans and designs with probing questions to surface hidden assumptions. | Refer to this skill under rules section in `openspec/config.yaml`. |
 | `c4-diagrams` | `.agents/skills/` | Visualises system architecture using C4 model levels in ASCII or Mermaid. | Refer to this skill under `design` rule in `openspec/config.yaml`. |
@@ -101,15 +103,25 @@ Standard OpenSpec lifecycle skills in `.opencode/skills/` — names are self-exp
 | `gherkin-authoring` | `.agents/skills/` | Drafts and improves Gherkin scenarios for observable, domain-language behaviour. | Required by `spec-as-source` during the `specs` phase. |
 | `glossary` | `.agents/skills/` | Maintains business and technical terminology and companion glossary references for specification artifacts. | Can be referred to under `proposal` and/or `design` rule in `openspec/config.yaml`. |
 | `openspec-git-discipline` | `.agents/skills/` | Enforces that proposals reach `main` before apply, and implementation merges before archive. | Enabled through `AGENTS.md`. |
-| `spec-as-source` | `.agents/skills/` | Adds executable acceptance specifications to the intent-driven workflow. | Explicitly opt in by uncommenting both the `specs` and `tasks` rules in `openspec/config.yaml`. |
+| `spec-as-source` | `.agents/skills/` | Adds executable acceptance specifications to the intent-driven workflow. | Already enabled under both the `specs` and `tasks` rules in `openspec/config.yaml`. |
 | `acceptance-test-authoring` | `.agents/skills/` | Configures the acceptance runner, extraction, linting, and step definitions for `spec-as-source`. | Required by `spec-as-source` when configuring or changing acceptance-test infrastructure. |
-| `test-driven-development` | `.agents/skills/` | Guides strict red-green-refactor TDD: one behaviour per test, minimal implementation to pass, refactoring on green, with best-practice patterns and collaborator mocking guidance. | Loaded by the `senior-dev` agent in `.opencode/agent/senior-dev.md`; enable by uncommenting the `context` lines in `openspec/config.yaml` that route src work to `senior-dev`. |
+| `test-driven-development` | `.agents/skills/` | Guides strict red-green-refactor TDD: one behaviour per test, minimal implementation to pass, refactoring on green, with best-practice patterns and collaborator mocking guidance. | Required by apply guidance in `openspec/config.yaml` and `AGENTS.md`; also loaded by `senior-dev` when delegated. |
 
-Example configurations are available in `openspec/config.yaml` and `AGENTS.md`. You can comment/uncomment the skill references to enable them.
+Current activation rules and protocols are in `openspec/config.yaml` and `AGENTS.md`.
+
+The `openspec-bulk-apply-change` skill is installed. No `/opsx-bulk-apply`
+command file is present, so invoke the skill directly. Bulk apply requires
+two or more eligible changes and explicit approval before creating isolated
+worktrees; it never merges or archives.
 
 ## Experimental: Spec As Source
 
-The `spec-as-source` skill is an opt-in layer on the intent-driven schema that uses fenced Gherkin in OpenSpec specifications as the source for generating acceptance tests. To enable `spec-as-source` capability add the skill reference under both the `specs` and `tasks` rules in `openspec/config.yaml`.
+The `spec-as-source` skill is an opt-in layer on the intent-driven schema that uses fenced Gherkin in OpenSpec specifications as the source for generating acceptance tests. It is already enabled in this repository under both the `specs` and `tasks` rules in `openspec/config.yaml`.
+
+Acceptance stack selection is deferred until a target project is chosen.
+Before scaffolding, confirm and record `stack: javascript` or `stack: python`
+in that project's `openspec/config.yaml`. Create the root `acceptance-tests/`
+project through the first change's setup tasks; it is not scaffolded here.
 
 During `specs`, `spec-as-source` requires `gherkin-authoring` to author the fenced Gherkin scenarios. During `tasks`, it replaces the standard task template with acceptance-test-first work: configure and run the acceptance suite, then implement application work. Use `acceptance-test-authoring` to configure the runner, extraction, linting, and step definitions that execute the specifications. See [Behavior-Driven Development and Spec-Driven Development with OpenSpec](https://intent-driven.dev/blog/2026/07/17/behavior-driven-development-sdd-openspec/).
 
