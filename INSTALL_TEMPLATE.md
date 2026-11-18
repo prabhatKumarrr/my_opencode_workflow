@@ -101,6 +101,21 @@ do not assume a CLI executable or .codegraph/ directory proves working setup.
 Check that an ancestor or another worktree's index is not being mistaken for
 this target's index.
 
+If the target contains independent nested Git repositories, identify every
+Git boundary and stop before assuming single-repository lifecycle semantics.
+
+Present a separate multi-repository adaptation plan covering:
+- Canonical planning-root/store resolution.
+- Root versus child Git ownership and ignore rules.
+- Per-repository integration branches, permissions and zone checkpoints.
+- Task-to-repository mapping and worktree behavior.
+- Per-repository CodeGraph indexes and verified query routing.
+- Contract ownership, test ownership and revision-specific integration evidence.
+
+Do not initialize parent Git, remove child OpenSpec roots, create submodules
+or rewrite reusable lifecycle skills implicitly. Installing files at a parent
+directory does not establish safe multi-repository orchestration.
+
 ## 4. Present the Installation Plan
 
 Before editing, provide:
@@ -141,6 +156,32 @@ Use this allowlist, expanded into exact paths during review.
 | .opencode/agent/*.md | Copy compatible specialist definitions; review collisions |
 | .agents/skills/** | Copy selected supporting skills with all required support files |
 | opencode.json | Create only if no applicable config exists; otherwise reconcile intentionally |
+
+### Bundled Skill Baseline
+
+The source currently contains 35 skills. Include their complete directories
+in the proposed file plan; do not silently omit a skill required by copied
+configuration or lifecycle guidance.
+
+| Group | Source | Skill IDs |
+| --- | --- | --- |
+| OpenSpec lifecycle | `.opencode/skills/` | `openspec-explore`, `openspec-new-change`, `openspec-propose`, `openspec-continue-change`, `openspec-update-change`, `openspec-apply-change`, `openspec-verify-change`, `openspec-sync-specs`, `openspec-archive-change`, `openspec-bulk-archive-change`, `openspec-bulk-apply-change` |
+| Council | `.opencode/skills/` | `adversarial-authoring` |
+| Planning, testing and Git | `.agents/skills/` | `grill-me`, `c4-diagrams`, `architectural-decision-records`, `gherkin-authoring`, `glossary`, `openspec-git-discipline`, `spec-as-source`, `acceptance-test-authoring`, `test-driven-development` |
+| Ponytail | `.agents/skills/` | `ponytail`, `ponytail-review`, `ponytail-audit`, `ponytail-debt` |
+| Frontend design and motion | `.agents/skills/` | `emil-design-eng`, `animate`, `gestures`, `choreograph`, `animation-performance`, `mobile-native`, `review-animations`, `improve-animations`, `break-ui`, `remove-animations` |
+
+Confirm this inventory against the selected source revision. Counts are an
+audit baseline, not a reason to delete or replace extra target skills.
+Explain intentional omissions and resolve affected routing before installation.
+
+Transfer all required references, scripts, templates and preferences.
+Preserve Ponytail's recorded `full` mode and the selected ADR preference unless
+the user approves a change. Do not add unbundled companion skills or plugins.
+
+The source includes 10 command files and four specialist agent definitions.
+Bulk apply has no bundled slash command. Skill names that resemble slash
+commands do not prove that a command file exists.
 
 Preserve complete skill directories, including references, templates, mode
 and preference files. Do not copy only SKILL.md.
@@ -239,6 +280,24 @@ For React/browser behaviour, explain the HTTP-only coverage boundary.
 Playwright remains an optional, separately approved project integration;
 it does not require a new acceptance stack value or a second runner.
 
+### Integration Status
+
+| Component | Installation treatment |
+| --- | --- |
+| Bundled skills, commands and agents | Transfer approved files and verify discovery |
+| OpenCode plugins | None enabled by the base source; preserve existing target configuration |
+| CodeGraph CLI/MCP/index | Default-selected; execute only the approved operations in section 7.1 |
+| Acceptance runner/dependencies | Defer unless already configured; establish through approved setup tasks |
+| Playwright library or Test runner | Deferred project choice under section 7.2 |
+| Playwright MCP | Separate optional agent-tool integration; not implied by browser testing |
+| Superpowers | Not selected for automatic installation; separate compatibility review |
+| Impeccable and taste-skill | Not selected or bundled |
+
+Bundled skill examples do not authorize installing their example libraries.
+Installing Markdown skills does not install test dependencies, browser binaries
+or MCP servers. Global CLI availability and project-local configuration/index
+scope must be assessed independently.
+
 ### 7.1 CodeGraph — Default-Selected, Approval-Gated Setup
 
 Upstream: https://github.com/colbymchenry/codegraph
@@ -249,6 +308,24 @@ Perform this section only after the user approves the concrete operations.
 Keep setup in the code-zone batch and respect all target permissions.
 
 **Detect and reuse first**
+
+A CLI available outside the target may be reused without reinstalling it in
+every repository. Locate the resolved executable and inspect the relevant
+package-manager installation only when needed; do not infer installation
+scope from the directory in which setup was run.
+
+Conversely, project-local CLI dependencies are possible. Preserve the target's
+chosen installation/version policy; do not force a global installation.
+
+Project-local MCP configuration and project-local graph state are separate
+from CLI package scope. Do not promise that local installation keeps all
+package caches, telemetry state or browser/tool artifacts inside the repo.
+
+For multiple independent repositories, reuse the CLI and maintain separate
+correct-project indexes unless a different indexing scope is explicitly
+approved. Verify project selection for every MCP/CLI query. One working
+backend MCP connection does not prove workspace-wide routing; use supported
+explicit project selection, reviewed server entries or a verified CLI fallback.
 
 - Locate the CLI and check its version and installed-version help.
 - Inspect effective MCP configuration and runtime tool availability. Reuse a
@@ -356,6 +433,54 @@ later queries. Refreshes outside the approved watcher behaviour require the
 normal permission checks. CodeGraph never replaces TDD, the full required
 acceptance suite, reviews, strict OpenSpec validation or git checkpoints.
 
+### 7.2 Playwright — Deferred Target-Project Integration
+
+Playwright is not part of the file-transfer installation. Do not install
+packages, browser binaries, system dependencies or MCP servers here.
+
+During assessment, identify:
+- Whether required behavior needs a real browser.
+- Existing browser tools, runners and CI coverage.
+- Whether HTTP-only acceptance coverage misses client-side behavior.
+- The owner of frontend/backend integration tests in multi-repo targets.
+
+Record the coverage gap and deferred decision; do not silently claim browser
+readiness from HTTP-client acceptance tests.
+
+Distinguish three choices:
+- Playwright library: browser automation used from an existing runner.
+- Playwright Test: a separate test runner with its own lifecycle/configuration.
+- Playwright MCP: agent-facing browser tools, not a repeatable acceptance suite.
+
+For an approved JavaScript/Cucumber setup, the browser library can run through
+Cucumber hooks and page objects without introducing a new stack value or a
+second runner. Existing HTTP-oriented World/page-object guidance must be
+explicitly reconciled for browser work; it is not a ready-made browser adapter.
+
+Any later setup plan must name:
+1. Dependency owner, package/lockfile changes and selected versions.
+2. Browser binaries, download/cache locations and any system dependencies.
+3. Application startup/readiness/teardown and relevant portal/API origins.
+4. Browser/context lifecycle, per-scenario isolation and cleanup.
+5. Test accounts, authorization boundaries and non-production test data.
+6. Page-object and step-definition responsibilities.
+7. Explicit timeouts, asynchronous assertions and failure diagnostics.
+8. Required acceptance HTML report plus approved traces/screenshots/video,
+   with sensitive-data handling, ignore rules and retention.
+9. Local and CI commands, environment requirements and execution ownership.
+10. Effective-spec composition checks and zero pending/undefined steps.
+
+Preserve specs as the canonical acceptance source. Do not create a second
+authoritative copy of the same scenarios merely to use another runner.
+
+Mocked frontend tests do not establish actual frontend/backend integration.
+Browser automation does not replace manual real-device checks where required
+by mobile or gesture work.
+
+Approve and implement browser setup through a separately scoped active
+change. A decision to use the library does not authorize MCP installation,
+and a working MCP browser session does not satisfy acceptance gates.
+
 ## 8. Validate the Installed Wiring
 
 Run only read-only checks available in the target environment:
@@ -383,6 +508,18 @@ Also verify:
 - All required AGENTS.md gates survived the merge.
 - Existing plugins, permissions, models, commands and settings were preserved.
 - No product history, generated outputs or unintended files were copied.
+- Compare installed skill IDs against the approved source inventory; preserve
+  intentional target overrides and report omissions or collisions.
+- Verify all four specialist definitions and actual command discovery.
+- Confirm Ponytail mode, ADR preference and frontend-only routing survived.
+- Verify council model availability without executing authoring rounds merely
+  as an installation test.
+- Report that council read-only behavior is instruction-based while edit
+  permission remains allowed; do not claim a permission-enforced sandbox.
+- Distinguish configured integrations from connected tools and verified indexes.
+- Record HTTP-only versus real-browser coverage and all deferred setup.
+- In multi-repo targets, validate each affected Git boundary and planning/query
+  scope separately; root status alone is insufficient.
 
 In OpenCode, confirm command, agent and skill discovery after reload if
 needed. Use supported runtime discovery; file existence alone is insufficient.
@@ -431,6 +568,13 @@ Report:
 - CodeGraph selection, CLI/version/location, reused or changed MCP setup, exact
   index root and health/query results, telemetry/watcher policy and fallback.
   Include deferred greenfield indexing or unapproved repairs explicitly.
+- Approved versus installed skill/command/agent inventory, including omissions.
+- Ponytail mode, ADR preference and frontend skill activation policy.
+- Project plugin state versus inherited/global configuration when inspected.
+- Acceptance stack/runner state and HTTP/browser coverage boundaries.
+- Playwright library, Test runner and MCP decisions separately; list deferred
+  dependencies, downloads, CI work and test ownership.
+- Multi-repo adaptations actually verified versus capabilities still unsupported.
 
 Distinguish "workflow files installed" from "application workflow verified".
 
